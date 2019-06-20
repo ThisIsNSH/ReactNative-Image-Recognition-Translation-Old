@@ -1,43 +1,82 @@
 import React, { Component } from 'react';
-import { ListView, StyleSheet } from 'react-native';
+import { ListView, Picker, Text, ScrollView, View, StyleSheet } from 'react-native';
 import Translate from './components/translation/translate/index';
 
 export default class Translation extends Component {
 
-    constructor(props) {
-        super(props)
-        const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-        this.state = {
-            dataSource: ds.cloneWithRows([
-                { text: "Hello", trans: "Hallo" }, 
-                { text: "How are you?", trans: "Wie geht es Ihnen" }, 
-                { text: "Good Morning", trans: "Guten Morgen" }, 
-                { text: "What's your name?", trans: "Wie heißen Sie?" }, 
-                { text: "Thanks", trans: "Vielen Dank" }, 
-                { text: "I'm at a party I don't wanna be at And I don't ever wear a suit and tie Wonderin' if I could sneak out the back Nobody's even lookin' me in my eyes Then you take my hand Finish my drink, say, \"Shall we dance?\" Hell, yeah You know I love you, did I ever tell you\? You make it better like that", trans: "Ich bin auf einer Party, auf der ich nicht sein will Und ich ziehe nie Anzug und Krawatte an. Ich frage mich, ob ich den Rücken herausschleichen kann. Niemand schaut mir überhaupt in die Augen. Dann nimmst du meine Hand. sag: \"Sollen wir tanzen?\" Zur Hölle, ja. Weißt du, ich liebe dich? Habe ich es dir jemals gesagt? Du machst es besser so" }, 
-            ]),
-        };
-    }
+  constructor(props) {
+    super(props)
 
-    renderRow(rowData){
-        return <Translate text={rowData.text} trans={rowData.trans}/>
-    }
+    this.bigData = [
+      [
+        { text: "Hello", trans: "Hallo" },
+        { text: "How are you?", trans: "Wie geht es Ihnen" },
+        { text: "Good Morning", trans: "Guten Morgen" },
+        { text: "What's your name?", trans: "Wie heißen Sie?" },
+        { text: "Thanks", trans: "Vielen Dank" },
+      ],
+      [
+        { text: "Hello", trans: "Bonjour" },
+        { text: "How are you?", trans: "Comment vas-tu?" },
+        { text: "Good Morning", trans: "Bonjour" },
+        { text: "What's your name?", trans: "Quel est ton nom?" },
+        { text: "Thanks", trans: "Merci" },
+      ],
+      [
+        { text: "Hello", trans: "Hola" },
+        { text: "How are you?", trans: "Cómo estás?" },
+        { text: "Good Morning", trans: "Buenos días" },
+        { text: "What's your name?", trans: "Cuál es tu nombre?" },
+        { text: "Thanks", trans: "Gracias" },
+      ]
+    ];
+    
+    this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
-    render() {
-        return (
-            <ListView
-                style={styles.container}
-                dataSource={this.state.dataSource}
-                renderRow={this.renderRow}
-            />
-        );
-    }
+    this.state = {
+      dataSource: this.ds.cloneWithRows(this.bigData[0]),
+      language: 0
+    };
+
+    this.updateLanguage = this.updateLanguage.bind(this);
+  }
+
+  updateLanguage = (language) => {
+    this.setState({ language: language, dataSource: this.ds.cloneWithRows(this.bigData[language]) })
+  }
+
+  renderRow(rowData) {
+    return <Translate text={rowData.text} trans={rowData.trans} />
+  }
+
+  render() {
+    return (
+      <View>
+        <ScrollView>
+          <Picker selectedValue={this.state.language} onValueChange={this.updateLanguage}>
+            <Picker.Item label="German" value={0} />
+            <Picker.Item label="French" value={1} />
+            <Picker.Item label="Spanish" value={2} />
+          </Picker>
+          <ListView
+            style={{paddingBottom: 48}}
+            dataSource={this.state.dataSource}
+            renderRow={this.renderRow}
+          />
+        </ScrollView>
+      </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 48,
-    paddingBottom: 48,
-    flex: 1
-  },  
+    flex: 1,
+  },
+  picker: {
+    color: '#ff0000',
+    fontSize: 20,
+    marginBottom: -20,
+    fontFamily: 'AvenirNextCondensed-Regular'
+  }
 });

@@ -30,22 +30,23 @@ Translate.propTypes = {
 
 const styles = StyleSheet.create({
     container: {
+        backgroundColor: '#fafafa',
+        margin: 16,
+        padding: 16,
+        borderRadius: 20,
         flexDirection: 'column'
     },
     text: {
         flex: 1,
-        marginLeft: 36,
-        marginRight: 36,
+        marginLeft: 20,
+        marginRight: 20,
         paddingBottom: 4,
-        paddingTop: 16,
         color: '#000',
         fontSize: 20,
         alignItems: 'flex-start',
         fontFamily: 'AvenirNextCondensed-Regular',
     },
     gradient: {
-        marginLeft: 16,
-        marginRight: 16,
         borderRadius: 20,
     },
     trans: {
