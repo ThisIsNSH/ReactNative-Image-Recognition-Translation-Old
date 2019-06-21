@@ -18,6 +18,7 @@ export default class Translate extends Component {
                         <Text style={styles.trans}>{this.props.trans}</Text>
                     </LinearGradient>
                 </View>
+                <View style={{height: 0.5, backgroundColor: '#bbb'}}></View>
             </View>
         );
     }
@@ -30,9 +31,8 @@ Translate.propTypes = {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#fafafa',
-        margin: 16,
-        padding: 16,
+        marginLeft: 16,
+        marginRight: 16,
         borderRadius: 20,
         flexDirection: 'column'
     },
@@ -40,6 +40,7 @@ const styles = StyleSheet.create({
         flex: 1,
         marginLeft: 20,
         marginRight: 20,
+        marginTop: 16,
         paddingBottom: 4,
         color: '#000',
         fontSize: 20,
@@ -48,6 +49,7 @@ const styles = StyleSheet.create({
     },
     gradient: {
         borderRadius: 20,
+        marginBottom: 20,
     },
     trans: {
         paddingLeft: 20,

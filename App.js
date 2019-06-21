@@ -59,12 +59,16 @@ export default class Translation extends Component {
       }),
     }).then((response) => response.json())
       .then((responseJson) => {
-        var i = 0;
-        var data1 = [];
-        for (i = 0; i < this.text.length; i++) {
-          data1.push({ text: this.text[i], trans: responseJson.translations[i].translation });
+        if (responseJson.translations == undefined) {
+          this.setState({ language: language, dataSource: this.ds.cloneWithRows(this.data1) })
+        } else {
+          var i = 0;
+          var data1 = [];
+          for (i = 0; i < this.text.length; i++) {
+            data1.push({ text: this.text[i], trans: responseJson.translations[i].translation });
+          }
+          this.setState({ language: language, dataSource: this.ds.cloneWithRows(data1) })
         }
-        this.setState({ language: language, dataSource: this.ds.cloneWithRows(data1) })
       })
       .catch((error) => {
         console.error(error);
@@ -86,9 +90,10 @@ export default class Translation extends Component {
     return (
       <View>
         <ScrollView>
-          <Picker selectedValue={this.state.language} onValueChange={this.updateLanguage}>
+          <Picker style= {{marginLeft: 16, marginRight: 16}} selectedValue={this.state.language} onValueChange={this.updateLanguage}>
             {pickers}
           </Picker>
+          <View style={{height: 0.5, marginLeft: 16, marginRight: 16, backgroundColor: '#bbb'}}></View>
           <ListView
             style={{ paddingBottom: 48 }}
             dataSource={this.state.dataSource}
