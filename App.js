@@ -7,6 +7,8 @@ export default class Translation extends Component {
   constructor(props) {
     super(props)
 
+    this.text = ["Hello", "How are you?", "Good Morning", "What's your name?", "Thanks"];
+
     this.bigData = [
       [
         { text: "Hello", trans: "Hallo" },
@@ -30,19 +32,42 @@ export default class Translation extends Component {
         { text: "Thanks", trans: "Gracias" },
       ]
     ];
-    
+
     this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
     this.state = {
       dataSource: this.ds.cloneWithRows(this.bigData[0]),
-      language: 0
+      language: 'en',
+      languages: []
     };
 
     this.updateLanguage = this.updateLanguage.bind(this);
+
+  }
+
+  componentDidMount() {
+    return fetch('https://gateway-lon.watsonplatform.net/language-translator/api/v3/identifiable_languages?version=2018-05-01', {
+      method: 'GET',
+      headers: {
+        'Authorization': 'Basic YXBpa2V5OndvSFF1MERhalpsOFFQc3FaUGF3OU92N080d2I4MmJVeXVPb0dMR0VwMFBh'
+      }
+    }).then((response) => response.json())
+      .then((responseJson) => {
+        this.setState({
+          languages: responseJson.languages,
+        }, function () {
+
+        });
+
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
   updateLanguage = (language) => {
-    this.setState({ language: language, dataSource: this.ds.cloneWithRows(this.bigData[language]) })
+    console.log(language)
+    this.setState({ language: language, dataSource: this.ds.cloneWithRows(this.bigData[0]) })
   }
 
   renderRow(rowData) {
@@ -50,16 +75,21 @@ export default class Translation extends Component {
   }
 
   render() {
+
+    var pickers = [];
+    var i;
+    for (i = 0; i < this.state.languages.length; i++) {
+      pickers.push(<Picker.Item key={this.state.languages[i].language} label={this.state.languages[i].name} value={this.state.languages[i].language} />);
+    }
+
     return (
       <View>
         <ScrollView>
           <Picker selectedValue={this.state.language} onValueChange={this.updateLanguage}>
-            <Picker.Item label="German" value={0} />
-            <Picker.Item label="French" value={1} />
-            <Picker.Item label="Spanish" value={2} />
+            { pickers }
           </Picker>
           <ListView
-            style={{paddingBottom: 48}}
+            style={{ paddingBottom: 48 }}
             dataSource={this.state.dataSource}
             renderRow={this.renderRow}
           />
